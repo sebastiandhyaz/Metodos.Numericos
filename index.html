@@ -100,12 +100,17 @@
 
         .grid-2 {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 450px), 1fr));
+            gap: 20px;
+        }
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 450px), 1fr));
             gap: 20px;
         }
 
         .controls {
             display: flex;
+            flex-wrap: wrap;
             gap: 20px;
             margin-bottom: 20px;
         }
@@ -137,16 +142,36 @@
             background: #000;
         }
 
-        .matrix-input {
-            display: grid;
-            grid-template-columns: repeat(3, 70px) 20px 70px;
-            gap: 10px;
+        .matrix-row {
+            display: flex;
             align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
         }
 
-        .matrix-input input {
-            width: 100%;
+        .matrix-row input {
+            width: 70px;
             text-align: center;
+            font-size: 1.1rem;
+        }
+        
+        .matrix-row span {
+            font-weight: bold;
+            width: 50px;
+            text-align: center;
+            color: var(--neon-yellow);
+        }
+
+        .console-output {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            min-height: 100px;
+            box-shadow: inset 0 0 10px rgba(0,255,136,0.1);
         }
 
         .interpretation {
@@ -242,14 +267,20 @@
                 <button onclick="loadScenario('estres')">Cargar Estrés</button>
                 <button onclick="loadScenario('mal_condicionado')">Cargar Mal Cond.</button>
             </div>
-            <div class="matrix-input">
-                <input type="number" id="A00" step="any"> <input type="number" id="A01" step="any"> <input type="number" id="A02" step="any"> <span>x1</span> <input type="number" id="b0" step="any">
-                <input type="number" id="A10" step="any"> <input type="number" id="A11" step="any"> <input type="number" id="A12" step="any"> <span>x2 =</span> <input type="number" id="b1" step="any">
-                <input type="number" id="A20" step="any"> <input type="number" id="A21" step="any"> <input type="number" id="A22" step="any"> <span>x3</span> <input type="number" id="b2" step="any">
+            <div class="matrix-container" style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 8px;">
+                <div class="matrix-row">
+                    <input type="number" id="A00" step="any"> <input type="number" id="A01" step="any"> <input type="number" id="A02" step="any"> <span>x₁ +</span> <input type="number" id="b0" step="any">
+                </div>
+                <div class="matrix-row">
+                    <input type="number" id="A10" step="any"> <input type="number" id="A11" step="any"> <input type="number" id="A12" step="any"> <span>x₂ =</span> <input type="number" id="b1" step="any">
+                </div>
+                <div class="matrix-row">
+                    <input type="number" id="A20" step="any"> <input type="number" id="A21" step="any"> <input type="number" id="A22" step="any"> <span>x₃ </span> <input type="number" id="b2" step="any">
+                </div>
             </div>
             <br>
-            <button onclick="solveInteractive()">Resolver Localmente (Navegador)</button>
-            <div id="interactive-results" style="margin-top: 20px;"></div>
+            <button onclick="solveInteractive()" style="width: 100%; font-size: 1.1rem; padding: 15px;">Resolver Localmente (Navegador)</button>
+            <div id="interactive-results" class="console-output">Esperando ejecución...</div>
         </div>
 
         <div class="card">
@@ -554,12 +585,12 @@
             let resS = sor(A, b, 1.25);
             let resP = pcg(A, b);
             
-            let msg = `<strong>Solución (PCG JS):</strong> [${resP.solucion.map(n=>n.toFixed(4)).join(', ')}]<br><br>`;
-            msg += `<strong>Iteraciones:</strong><br>`;
-            msg += `Jacobi: ${resJ.iteraciones} (${resJ.convergio ? '<span class="good">OK</span>' : '<span class="bad">Fallo</span>'})<br>`;
-            msg += `Gauss-Seidel: ${resG.iteraciones} (${resG.convergio ? '<span class="good">OK</span>' : '<span class="bad">Fallo</span>'})<br>`;
-            msg += `SOR (ω=1.25): ${resS.iteraciones} (${resS.convergio ? '<span class="good">OK</span>' : '<span class="bad">Fallo</span>'})<br>`;
-            msg += `PCG: ${resP.iteraciones} (${resP.convergio ? '<span class="good">OK</span>' : '<span class="bad">Fallo</span>'})`;
+            let msg = `<span style="color: var(--neon-yellow);">Sistema resuelto. Resultados JS:</span><br><br>`;
+            msg += `<span class="good">x = [${resP.solucion.map(n=>n.toFixed(4)).join(', ')}]</span><br><br>`;
+            msg += `> Iteraciones Jacobi: ${resJ.iteraciones} (${resJ.convergio ? '<span class="good">OK</span>' : '<span class="bad">Fallo</span>'})<br>`;
+            msg += `> Iteraciones Gauss-Seidel: ${resG.iteraciones} (${resG.convergio ? '<span class="good">OK</span>' : '<span class="bad">Fallo</span>'})<br>`;
+            msg += `> Iteraciones SOR (ω=1.25): ${resS.iteraciones} (${resS.convergio ? '<span class="good">OK</span>' : '<span class="bad">Fallo</span>'})<br>`;
+            msg += `> Iteraciones PCG: ${resP.iteraciones} (${resP.convergio ? '<span class="good">OK</span>' : '<span class="bad">Fallo</span>'})`;
             
             document.getElementById('interactive-results').innerHTML = msg;
         }
@@ -581,7 +612,8 @@
             light.position.set(10, 20, 10);
             scene.add(light);
             scene.add(new THREE.AmbientLight(0x404040));
-            scene.add(new THREE.AxesHelper(10));
+            scene.add(new THREE.AxesHelper(15));
+            scene.add(new THREE.GridHelper(30, 10, 0x00ff88, 0x222222));
             
             animate();
         }
@@ -598,20 +630,35 @@
             // Add some planes visually representing the system approx
             let colors = [0x00ff88, 0xffcc00, 0xff4444];
             for(let i=0; i<3; i++) {
-                let geo = new THREE.PlaneGeometry(20, 20);
-                let mat = new THREE.MeshLambertMaterial({color: colors[i], side: THREE.DoubleSide, transparent: true, opacity: 0.5});
+                let geo = new THREE.PlaneGeometry(30, 30);
+                let mat = new THREE.MeshBasicMaterial({
+                    color: colors[i], 
+                    side: THREE.DoubleSide, 
+                    transparent: true, 
+                    opacity: 0.25,
+                    depthWrite: false
+                });
                 let plane = new THREE.Mesh(geo, mat);
-                // Fake orientation based on matrix
-                plane.rotation.x = Math.random() * Math.PI;
-                plane.rotation.y = Math.random() * Math.PI;
+                
+                // Representación estética de los planos
+                plane.rotation.x = Math.PI / (i + 1.5);
+                plane.rotation.y = Math.PI / (i + 2.5);
+                
+                // Malla wireframe para que se vea mucho mejor
+                let edges = new THREE.EdgesGeometry(geo);
+                let line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: colors[i], transparent: true, opacity: 0.8 }));
+                plane.add(line);
+                
                 scene.add(plane);
             }
+            controls.autoRotate = true;
+            controls.autoRotateSpeed = 1.5;
             controls.update();
         }
 
         function animate() {
             requestAnimationFrame(animate);
-            controls.update();
+            if (controls) controls.update();
             renderer.render(scene, camera);
         }
 
