@@ -13,12 +13,12 @@
 
         :root {
             --bg-color: #0a0a0f;
-            --neon-green: #00ff88;
-            --neon-yellow: #ffcc00;
+            --neon-primary: #00e5ff; --neon-green: #00e5ff;
+            --neon-secondary: #ff0055; --neon-yellow: #ff0055;
             --neon-red: #ff4444;
             --text-color: #e0e0e0;
             --panel-bg: rgba(20, 20, 30, 0.8);
-            --border-color: rgba(0, 255, 136, 0.3);
+            --border-color: rgba(0, 229, 255, 0.3);
             --font-mono: 'JetBrains Mono', monospace;
             --font-display: 'Share Tech Mono', monospace;
         }
@@ -29,8 +29,8 @@
             font-family: var(--font-mono);
             margin: 0;
             padding: 20px;
-            background-image: linear-gradient(rgba(0, 255, 136, 0.05) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0, 255, 136, 0.05) 1px, transparent 1px);
+            background-image: linear-gradient(rgba(0, 229, 255, 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 229, 255, 0.05) 1px, transparent 1px);
             background-size: 50px 50px;
         }
 
@@ -42,7 +42,7 @@
         h1 {
             font-family: var(--font-display);
             color: var(--neon-green);
-            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+            text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
             font-size: 2.5rem;
             margin-bottom: 5px;
         }
@@ -54,12 +54,12 @@
         }
 
         .badge {
-            background: rgba(0, 255, 136, 0.1);
+            background: rgba(0, 229, 255, 0.1);
             border: 1px solid var(--neon-green);
             padding: 5px 15px;
             border-radius: 15px;
             font-size: 0.9rem;
-            box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+            box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
         }
 
         .card {
@@ -68,7 +68,7 @@
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 30px;
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.1);
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.1);
             backdrop-filter: blur(5px);
         }
 
@@ -99,10 +99,6 @@
         .bad { color: var(--neon-red); }
 
         .grid-2 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, 450px), 1fr));
-            gap: 20px;
-        }
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(min(100%, 450px), 1fr));
             gap: 20px;
@@ -262,24 +258,34 @@
     <div class="grid-2">
         <div class="card">
             <h2>Editor Interactivo (JavaScript Solver)</h2>
-            <div style="margin-bottom: 15px;">
-                <button onclick="loadScenario('ideal')">Cargar Ideal</button>
-                <button onclick="loadScenario('estres')">Cargar Estrés</button>
-                <button onclick="loadScenario('mal_condicionado')">Cargar Mal Cond.</button>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;">
+                <button onclick="loadScenario('ideal')" style="flex:1">Caso Ideal</button>
+                <button onclick="loadScenario('estres')" style="flex:1">Caso Estrés</button>
+                <button onclick="loadScenario('mal_condicionado')" style="flex:1">Mal Cond.</button>
             </div>
-            <div class="matrix-container" style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 8px;">
+            
+            <div class="matrix-container" style="background: rgba(0,0,0,0.5); padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 15px;">
                 <div class="matrix-row">
-                    <input type="number" id="A00" step="any"> <input type="number" id="A01" step="any"> <input type="number" id="A02" step="any"> <span>x₁ +</span> <input type="number" id="b0" step="any">
+                    <input type="number" id="A00" step="any"> <input type="number" id="A01" step="any"> <input type="number" id="A02" step="any"> <span>x₁ =</span> <input type="number" id="b0" step="any">
                 </div>
                 <div class="matrix-row">
                     <input type="number" id="A10" step="any"> <input type="number" id="A11" step="any"> <input type="number" id="A12" step="any"> <span>x₂ =</span> <input type="number" id="b1" step="any">
                 </div>
                 <div class="matrix-row">
-                    <input type="number" id="A20" step="any"> <input type="number" id="A21" step="any"> <input type="number" id="A22" step="any"> <span>x₃ </span> <input type="number" id="b2" step="any">
+                    <input type="number" id="A20" step="any"> <input type="number" id="A21" step="any"> <input type="number" id="A22" step="any"> <span>x₃ =</span> <input type="number" id="b2" step="any">
                 </div>
             </div>
-            <br>
-            <button onclick="solveInteractive()" style="width: 100%; font-size: 1.1rem; padding: 15px;">Resolver Localmente (Navegador)</button>
+
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <select id="interactive-method-sel" style="flex: 1; font-size: 1.1rem; text-align: center;">
+                    <option value="jacobi">Método: Jacobi</option>
+                    <option value="gauss_seidel">Método: Gauss-Seidel</option>
+                    <option value="sor">Método: SOR (ω=1.25/1.05)</option>
+                    <option value="pcg">Método: Gradiente Conjugado (PCG)</option>
+                </select>
+                <button onclick="solveInteractive()" style="flex: 1; font-size: 1.1rem; background: var(--neon-primary); color: #000; font-weight: bold;">Calcular</button>
+            </div>
+
             <div id="interactive-results" class="console-output">Esperando ejecución...</div>
         </div>
 
@@ -530,7 +536,7 @@
                     datasets: [{
                         label: 'Error Relativo',
                         data: hist,
-                        borderColor: '#00ff88',
+                        borderColor: '#00e5ff',
                         tension: 0.1,
                         pointRadius: 2
                     }]
@@ -580,17 +586,24 @@
             ];
             let b = [+document.getElementById('b0').value, +document.getElementById('b1').value, +document.getElementById('b2').value];
             
-            let resJ = jacobi(A, b);
-            let resG = gaussSeidel(A, b);
-            let resS = sor(A, b, 1.25);
-            let resP = pcg(A, b);
+            let method = document.getElementById('interactive-method-sel').value;
+            let res;
+            let methodName = "";
             
-            let msg = `<span style="color: var(--neon-yellow);">Sistema resuelto. Resultados JS:</span><br><br>`;
-            msg += `<span class="good">x = [${resP.solucion.map(n=>n.toFixed(4)).join(', ')}]</span><br><br>`;
-            msg += `> Iteraciones Jacobi: ${resJ.iteraciones} (${resJ.convergio ? '<span class="good">OK</span>' : '<span class="bad">Fallo</span>'})<br>`;
-            msg += `> Iteraciones Gauss-Seidel: ${resG.iteraciones} (${resG.convergio ? '<span class="good">OK</span>' : '<span class="bad">Fallo</span>'})<br>`;
-            msg += `> Iteraciones SOR (ω=1.25): ${resS.iteraciones} (${resS.convergio ? '<span class="good">OK</span>' : '<span class="bad">Fallo</span>'})<br>`;
-            msg += `> Iteraciones PCG: ${resP.iteraciones} (${resP.convergio ? '<span class="good">OK</span>' : '<span class="bad">Fallo</span>'})`;
+            // Detectar condicionamiento para SOR
+            let isIllConditioned = (+document.getElementById('A00').value === 4.000 && +document.getElementById('A01').value === 1.000);
+            let omega = isIllConditioned ? 1.05 : 1.25;
+
+            if (method === 'jacobi') { res = jacobi(A, b); methodName = "Jacobi"; }
+            else if (method === 'gauss_seidel') { res = gaussSeidel(A, b); methodName = "Gauss-Seidel"; }
+            else if (method === 'sor') { res = sor(A, b, omega); methodName = `SOR (ω=${omega})`; }
+            else if (method === 'pcg') { res = pcg(A, b); methodName = "Gradiente Conjugado Precondicionado"; }
+            
+            let msg = `<span style="color: var(--neon-primary); font-family: var(--font-display); font-size: 1.2rem;">RESULTADOS: ${methodName}</span><br><br>`;
+            msg += `<span class="good">Vector Solución [x₁, x₂, x₃]:</span><br>`;
+            msg += `> [${res.solucion.map(n=>n.toFixed(5)).join(', ')}]<br><br>`;
+            msg += `Estado: ${res.convergio ? '<span class="good">CONVERGE</span>' : '<span class="bad">NO CONVERGE (o diverge)</span>'}<br>`;
+            msg += `Iteraciones Requeridas: <span class="warn">${res.iteraciones}</span><br>`;
             
             document.getElementById('interactive-results').innerHTML = msg;
         }
@@ -628,7 +641,7 @@
             }
             
             // Add some planes visually representing the system approx
-            let colors = [0x00ff88, 0xffcc00, 0xff4444];
+            let colors = [0x00e5ff, 0xff0055, 0xffaa00];
             for(let i=0; i<3; i++) {
                 let geo = new THREE.PlaneGeometry(30, 30);
                 let mat = new THREE.MeshBasicMaterial({
