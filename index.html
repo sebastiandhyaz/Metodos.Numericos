@@ -268,14 +268,32 @@
                 <button onclick="loadScenario('mal_condicionado')" style="flex:1">Mal Cond.</button>
             </div>
             
-            <div class="matrix-container" style="background: rgba(0,0,0,0.5); padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 15px;">
-                <div class="matrix-grid">
-                    <input type="number" id="A00" step="any"> <input type="number" id="A01" step="any"> <input type="number" id="A02" step="any"> <span>x₁ =</span> <input type="number" id="b0" step="any">
-                    
-                    <input type="number" id="A10" step="any"> <input type="number" id="A11" step="any"> <input type="number" id="A12" step="any"> <span>x₂ =</span> <input type="number" id="b1" step="any">
-                    
-                    <input type="number" id="A20" step="any"> <input type="number" id="A21" step="any"> <input type="number" id="A22" step="any"> <span>x₃ =</span> <input type="number" id="b2" step="any">
-                </div>
+            
+            <div style="background: rgba(0, 0, 0, 0.5); padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 20px; overflow-x: auto;">
+                <table style="margin: 0 auto; border-collapse: separate; border-spacing: 10px 15px; border: none; width: 100%; max-width: 600px;">
+                    <tr>
+                        <td style="border: none;"><input type="number" id="A00" step="any" style="width: 100%; text-align: center; font-size: 1.1rem; padding: 10px;"></td>
+                        <td style="border: none;"><input type="number" id="A01" step="any" style="width: 100%; text-align: center; font-size: 1.1rem; padding: 10px;"></td>
+                        <td style="border: none;"><input type="number" id="A02" step="any" style="width: 100%; text-align: center; font-size: 1.1rem; padding: 10px;"></td>
+                        <td style="border: none; text-align: center; width: 50px;"><span style="font-weight: bold; color: var(--neon-secondary); font-size: 1.2rem;">x₁ =</span></td>
+                        <td style="border: none;"><input type="number" id="b0" step="any" style="width: 100%; text-align: center; font-size: 1.1rem; padding: 10px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="border: none;"><input type="number" id="A10" step="any" style="width: 100%; text-align: center; font-size: 1.1rem; padding: 10px;"></td>
+                        <td style="border: none;"><input type="number" id="A11" step="any" style="width: 100%; text-align: center; font-size: 1.1rem; padding: 10px;"></td>
+                        <td style="border: none;"><input type="number" id="A12" step="any" style="width: 100%; text-align: center; font-size: 1.1rem; padding: 10px;"></td>
+                        <td style="border: none; text-align: center; width: 50px;"><span style="font-weight: bold; color: var(--neon-secondary); font-size: 1.2rem;">x₂ =</span></td>
+                        <td style="border: none;"><input type="number" id="b1" step="any" style="width: 100%; text-align: center; font-size: 1.1rem; padding: 10px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="border: none;"><input type="number" id="A20" step="any" style="width: 100%; text-align: center; font-size: 1.1rem; padding: 10px;"></td>
+                        <td style="border: none;"><input type="number" id="A21" step="any" style="width: 100%; text-align: center; font-size: 1.1rem; padding: 10px;"></td>
+                        <td style="border: none;"><input type="number" id="A22" step="any" style="width: 100%; text-align: center; font-size: 1.1rem; padding: 10px;"></td>
+                        <td style="border: none; text-align: center; width: 50px;"><span style="font-weight: bold; color: var(--neon-secondary); font-size: 1.2rem;">x₃ =</span></td>
+                        <td style="border: none;"><input type="number" id="b2" step="any" style="width: 100%; text-align: center; font-size: 1.1rem; padding: 10px;"></td>
+                    </tr>
+                </table>
+            </div>
             </div>
 
             <div style="display: flex; gap: 10px; margin-bottom: 15px;">
